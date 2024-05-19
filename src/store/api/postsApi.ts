@@ -19,7 +19,7 @@ export const postsApi = createApi({
     }),
     getPostById: build.query<postResponse, number>({
       query: (postId) => `/posts/${postId}`,
-      providesTags: (result) => [{ type: 'posts', id: 'LIST' }],
+      providesTags: (result) => [{ type: 'posts', id: result?.id }],
     }),
     editPost: build.mutation<void, Pick<postResponse, 'id'> & Partial<postResponse>>({
       query: ({ id, ...patch }) => ({
