@@ -1,5 +1,5 @@
 export enum Route {
-  Home = '/',
-  Post = '/message/:postId',
+  Home = '/post-community',
+  Post = '/post-community/message/:postId',
   NotFound = '*',
 }
