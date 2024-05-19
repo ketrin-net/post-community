@@ -2,6 +2,7 @@ import { Drawer, List } from 'antd';
 import { useGetPostsByUserIdQuery } from '../../store/api/postsApi';
 import { Link } from 'react-router-dom';
 import { skipToken } from '@reduxjs/toolkit/query';
+import { Route } from '../../config/routing/Route';
 
 interface UserDrawerProps {
   visible: boolean;
@@ -26,7 +27,7 @@ const UserDrawer = ({ visible, userId, username, onClose }: UserDrawerProps) => 
         <List
           dataSource={data}
           renderItem={(item, index) => (
-            <Link to={`/message/${item.id}`}>
+            <Link to={Route.Post.replace(':postId', String(item.id))}>
               <List.Item key={index}>
                 <List.Item.Meta title={item.title} description={item.body} />
               </List.Item>

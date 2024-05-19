@@ -17,7 +17,30 @@ export const postsApi = createApi({
           ? [...result.map(({ id }) => ({ type: 'posts' as const, id })), { type: 'posts', id: 'LIST' }]
           : [{ type: 'posts', id: 'LIST' }],
     }),
+    getPostById: build.query<postResponse, number>({
+      query: (postId) => `/posts/${postId}`,
+      providesTags: (result) => [{ type: 'posts', id: 'LIST' }],
+    }),
+    editPost: build.mutation<void, Pick<postResponse, 'id'> & Partial<postResponse>>({
+      query: ({ id, ...patch }) => ({
+        url: `posts/${id}`,
+        method: 'PATCH',
+        body: patch,
+      }),
+      async onQueryStarted({ id, ...patch }, { dispatch, queryFulfilled }) {
+        const patchResult = dispatch(
+          postsApi.util.updateQueryData('getPostById', id, (draft) => {
+            Object.assign(draft, patch);
+          }),
+        );
+        try {
+          await queryFulfilled;
+        } catch {
+          patchResult.undo();
+        }
+      },
+    }),
   }),
 });
 
-export const { useGetPostsByUserIdQuery } = postsApi;
+export const { useGetPostsByUserIdQuery, useGetPostByIdQuery, useEditPostMutation } = postsApi;
